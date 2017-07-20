@@ -49,8 +49,11 @@ public class FilterHandler {
 		List<Restriction> restrictions = query.getRestrictions();
 		List<String> operators = query.getLogicalOperators();
 		Predicate<List<String>> predicate = null;
+		
+		Predicate<List<String>> allPredicates = null;
+		
 
-		List<List<String>> originalRows = new ArrayList<>(rows);
+	//	List<List<String>> originalRows = new ArrayList<>(rows);
 
 		int operatorIndex = -1;
 
@@ -61,34 +64,54 @@ public class FilterHandler {
 
 				predicate = p -> p.get(0).split(",")[restriction.getPropertyPosition()]
 						.equals(restriction.getPropertyValue());
+			   // predicate = predicate.negate();
 				break;
 			case "!=":
 
 				predicate = p -> p.get(0).split(",")[restriction.getPropertyPosition()]
 						.equals(restriction.getPropertyValue());
+				//predicate = predicate.negate();
 				predicate = predicate.negate();
+				break;
+				
+			case ">":
+
+				predicate = p ->  Integer.parseInt( p.get(0).split(",")[restriction.getPropertyPosition()])
+						>(Integer.parseInt(restriction.getPropertyValue()));
+				
+				break;
+				
+			case "<":
+
+				predicate = p ->  Integer.parseInt( p.get(0).split(",")[restriction.getPropertyPosition()])
+						<(Integer.parseInt(restriction.getPropertyValue()));
+				
 				break;
 
 			}
+			
 
 			if (operatorIndex == -1) {
-				rows.removeIf(predicate.negate());
+				//rows.removeIf(predicate.negate());
+				allPredicates = predicate;
 				operatorIndex++;
 				continue;
 			}
+			
+			
 
 			if (operators.get(operatorIndex).equalsIgnoreCase("and")) {
-				rows.removeIf(predicate.negate());
+				//allPredicates.and(predicate);
+				allPredicates.and(predicate);
 			} else if (operators.get(operatorIndex).equalsIgnoreCase("or")) {
-				originalRows.removeIf(predicate.negate());
-				rows.addAll(originalRows);
+				allPredicates.or(predicate);
 			}
 			operatorIndex++;
 		}
+		 rows.removeIf(allPredicates.negate());
+		//return rows.stream().distinct().collect(Collectors.toList());
 
-		return rows.stream().distinct().collect(Collectors.toList());
-
-		// return rows;
+		 return rows;
 
 	}
 

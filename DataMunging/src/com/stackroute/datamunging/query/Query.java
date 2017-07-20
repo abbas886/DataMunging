@@ -160,7 +160,7 @@ public class Query {
 		if (queryString.contains("where")) {
 			String whereClauseQuery = queryString.split("where")[1].split("group by|order by")[0];
 
-			String[] expressions = whereClauseQuery.split("and|or");
+			String[] expressions = whereClauseQuery.split("\\s+and\\s+|\\s+or\\s+");
 
 			List<String> logicalOperators = new ArrayList<String>();
 
@@ -176,7 +176,7 @@ public class Query {
 
 	}
 
-	private static void addRescritions(Query query, String queryString) {
+	private  void addRescritions(Query query, String queryString) {
 		// select * from table where field='val'
 		// extract where conditions
 		if (queryString.contains("where")) {
@@ -192,7 +192,7 @@ public class Query {
 			// matcher.group();
 
 			List<String> header = getHeader();
-			String[] expressions = whereClauseQuery.split("and|or");
+			String[] expressions = whereClauseQuery.split("\\s+and\\s+|\\s+or\\s+");
 
 			String propertyName;
 			String propertyValue;
@@ -254,7 +254,7 @@ public class Query {
 	 * 
 	 * }
 	 */
-	private List<List<String>> getAllFields(Query query) {
+	/*private List<List<String>> getAllFields(Query query) {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 
 			result = reader.lines().skip(1).map(line -> Arrays.asList(line.split(SEPARATOR)))
@@ -265,7 +265,7 @@ public class Query {
 			e.printStackTrace();
 			return null;
 		}
-	}
+	}*/
 
 	private List<List<String>> filterSelectedFields(Query query) {
 		String line;
@@ -287,7 +287,8 @@ public class Query {
 			return null;
 		}
 	}
-
+	
+	
 	public List<List<String>> executeQuery(Query query) {
 		List<String> header = getHeader();
 
@@ -305,10 +306,30 @@ public class Query {
 		}
 
 	}
+	
+	
 
-	private static List<String> header = new ArrayList<String>();
+	/*public List<List<String>> executeQuery(Query query) {
+		List<String> header = getHeader();
 
-	private static List<String> getHeader() {
+		try (BufferedReader reader = Files.newBufferedReader(path)) {
+			result = reader.lines().skip(1).map(line -> Arrays.asList(line.split(SEPARATOR)))
+					.collect(Collectors.toList());
+
+			FilterHandler.filterRecords(result, query, header);
+			//FilterHandler.filterFields(result, query, header);
+
+			return result;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+	}*/
+
+	//private static List<String> header = new ArrayList<String>();
+
+	private  List<String> getHeader() {
 		try (BufferedReader reader = Files.newBufferedReader(path)) {
 			List<String> header = reader.lines().findFirst().map(line -> Arrays.asList(line.split(SEPARATOR))).get();
 			return Arrays.asList(header.get(0).split("\\s*,\\s*"));

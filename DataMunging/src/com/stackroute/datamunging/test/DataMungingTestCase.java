@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.stackroute.datamunging.file.CSVFileReader;
-import com.stackroute.datamunging.file.FileReader;
 import com.stackroute.datamunging.query.Query;
 
 public class DataMungingTestCase {
@@ -31,7 +30,7 @@ public class DataMungingTestCase {
 
 	}
 
-	@Test
+	//@Test
 	public void readHeader() {
 
 		List<String> header = fileReader.readHeader();
@@ -39,15 +38,9 @@ public class DataMungingTestCase {
 		displayHeader(header);
 	}
 
-	/*@Test
-	public void readData() {
+	
 
-		List<List<String>> records = fileReader.readRecords();
-		assertNotNull("readHeader", records);
-		displayRecords(records);
-	}*/
-
-    @Test
+   @Test
 	public void getAllRecords() {
 
 		query = query.createQuery("select * from D:/employee.csv");
@@ -57,7 +50,7 @@ public class DataMungingTestCase {
 		displayRecords(records);
 	}
 
-    @Test
+   @Test
 	public void restrictionEqual() {
 
 		query = query.createQuery("select * from D:/employee.csv where Department = 'Data Munging'");
@@ -90,7 +83,7 @@ public class DataMungingTestCase {
 	@Test
 	public void restrictionEqualAndEqual() {
 
-		query = query.createQuery("select * from D:/employee.csv where Department = 'Data Munging' and Location = 'Bombay'");
+		query = query.createQuery("select * from D:/employee.csv where Department = 'Data Munging'  and  Location = 'Bombay'");
 		List<List<String>> records = query.executeQuery(query);
 		assertNotNull("filterData", records);
 		System.out.println("\nselect * from D:/employee.csv where Department = 'Data Munging'  and  Location = 'Bombay'");
@@ -100,14 +93,14 @@ public class DataMungingTestCase {
 	@Test
 	public void restrictionEqualOrEqual() {
 
-		query = query.createQuery("select * from D:/employee.csv where Department = 'Data Munging' or Location = 'Bombay'");
+		query = query.createQuery("select * from D:/employee.csv where Department = 'Data Munging'  or  Department = 'Hobes'");
 		List<List<String>> records = query.executeQuery(query);
 		assertNotNull("filterData", records);
-		System.out.println("\nselect * from D:/employee.csv where Department = 'Data Munging'  or  Location = 'Bombay'");
+		System.out.println("\nselect * from D:/employee.csv where Department = 'Data Munging'  or  Department = 'Hobes'");
 		displayRecords(records);
 	}
 	
-	@Test
+	//@Test
 	public void restrictionNotEqualOrNotEqual() {
 
 		query = query.createQuery("select * from D:/employee.csv where Department != 'Data Munging' or Location != 'Bombay'");
@@ -117,7 +110,7 @@ public class DataMungingTestCase {
 		displayRecords(records);
 	}
 	
-	@Test
+	//@Test
 	public void restrictionNotEqualAndNotEqual() {
 
 		query = query.createQuery("select * from D:/employee.csv where Department != 'Data Munging' and Location != 'Bombay'");
@@ -129,17 +122,27 @@ public class DataMungingTestCase {
 		
 	}
 	
-	/*@Test
-	public void restrictionEqualAndEqualAge() {
+	//@Test
+	public void restrictionGreaterThan() {
 
-		query = query.createQuery("select * from D:/employee.csv where Department != 'Data Munging' and Location != 'Bombay'");
+		query = query.createQuery("select * from D:/employee.csv where Age > 70");
 		List<List<String>> records = query.executeQuery(query);
 		assertNotNull("filterData", records);
-		System.out.println("\nselect * from D:/employee.csv where Department != 'Data Munging'  and  Location != 'Bombay'");
+		System.out.println("\n select * from D:/employee.csv where Age > 70");
 		displayRecords(records);
-	}*/
+	}
 	
 	@Test
+	public void restrictionLessThanAndEqual() {
+
+		query = query.createQuery("select * from D:/employee.csv where Age < 40 and Location != 'Bangalore'");
+		List<List<String>> records = query.executeQuery(query);
+		assertNotNull("filterData", records);
+		System.out.println("\n select * from D:/employee.csv where Age < 40 and Location = 'Bangalore'");
+		displayRecords(records);
+	}
+	
+	//@Test
 		public void getSelectedFields() {
 
 			query = query.createQuery("select id, name, salary from D:/employee.csv");
